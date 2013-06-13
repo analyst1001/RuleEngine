@@ -1,0 +1,30 @@
+{
+  "name" : "CNools",
+    "description" : "Deterministic rule engine written in Coffeescript",
+    "bin": {
+      "nools": "./bin/nools"
+    },
+    "dependencies" : {
+      "declare.js": "~0.0.3",
+      "extended": "~0.0.3",
+      "is-extended": "~0.0.4",
+      "string-extended": "~0.0.3",
+      "array-extended": "~0.0.4",
+      "date-extended": "~0.0.3",
+      "function-extended": "~0.0.3",
+      "object-extended": "~0.0.3",
+      "promise-extended": "~0.0.3",
+      "leafy": "~0.0.2",
+      "ht": "~0.0.2",
+      "commander": "~1.1.1"
+    },
+    "devDependencies" : {
+      "mocha" : "1.9.x",
+      "jison": ">=0.3.2"
+    },
+    "engines": {
+      "node": ">= 0.6.1"
+    },
+    "main" : "index.js",
+    "version" : "1.0.0"
+}
