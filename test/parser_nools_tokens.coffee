@@ -1,5 +1,5 @@
 assert = require('assert')
-tokens = require('../bin/parser/nools/tokens.coffee')
+tokens = require('../src/parser/nools/tokens.coffee')
 should = require('should')
 
 describe "Block Tokenizers tests - ", ->

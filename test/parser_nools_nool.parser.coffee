@@ -1,5 +1,5 @@
 assert = require('assert')
-parser = require('../bin/parser/nools/nool.parser.coffee')
+parser = require('../src/parser/nools/nool.parser.coffee')
 should = require('should')
 
 describe "Parsing Functions Wrapper -", ->

@@ -1,5 +1,5 @@
 assert = require('assert')
-parser = require('../bin/parser/index.coffee')
+parser = require('../src/parser/index.coffee')
 should = require('should')
 
 describe "Parsing functions interface functions", ->

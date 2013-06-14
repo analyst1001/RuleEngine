@@ -1,5 +1,5 @@
 assert = require('assert')
-util = require('../bin/parser/nools/util.coffee')
+util = require('../src/parser/nools/util.coffee')
 should = require('should')
 
 describe "Parsing Utility Test - ", ->
