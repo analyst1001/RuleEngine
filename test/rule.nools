@@ -1,0 +1,96 @@
+define Machine {
+  type :'',
+  function : '',
+  testsList : [],
+  message : '',
+  constructor: function(t, f) {
+    this.type = t;
+    this.function = f;
+    this.testsList = [];
+    this.message = '';
+  }
+}
+
+define Test {
+  id : 0,
+  constructor : function(id) {
+    this.id = id;
+  }
+}
+
+rule "Tests for type1 m" {
+  salience : 100;
+  when {
+    m : Machine m.type == 'Type1';
+  }
+  then {
+    console.log("Type1");
+    var test1 = new Test(1);
+    var test2 = new Test(2);
+    var test3 = new Test(3);
+    m.message += "Rule Type1 Applied";
+    m.testsList.push(test1);
+    m.testsList.push(test2);
+    m.testsList.push(test3);
+  }
+}
+
+rule "Tests for type2, DNS server m" {
+  salience : 100;
+  when {
+    m : Machine (m.type == 'Type2') && (m.function == 'DNS Server');
+  }
+  then {
+    console.log("Type2 DNS Server");
+    var test5 = new Test(5);
+    var test4 = new Test(4);
+    m.message += "Rule Type2 DNS server applied";
+    m.testsList.push(test5);
+    m.testsList.push(test4);
+  }
+}
+
+rule "Tests for type2, DDNS server m" {
+  salience : 100;
+  when {
+    m : Machine (m.type == 'Type2') && (m.function == 'DDNS Server');
+  }
+  then {
+    console.log("Type2 DDNS Server");
+    var test2 = new Test(2);
+    var test3 = new Test(3);
+    m.message += "Rule Type2 DDNS server applied";
+    m.testsList.push(test2);
+    m.testsList.push(test3);
+  }
+}
+
+rule "Tests for type2, Gateway m" {
+  salience : 100;
+  when {
+    m : Machine (m.type == 'Type2') && (m.function == 'Gateway');
+  }
+  then {
+    console.log("Type2 Gateway");
+    var test3 = new Test(3);
+    var test4 = new Test(4);
+    m.message += "Rule Type2 Gatewayapplied";
+    m.testsList.push(test3);
+    m.testsList.push(test4);
+  }
+}
+
+rule "Tests for type2, Router m" {
+  salience : 100;
+  when {
+    m : Machine (m.type == 'Type2') && (m.function == 'Router');
+  }
+  then {
+    console.log("Type2 Router");
+    var test3 = new Test(3);
+    var test1 = new Test(1);
+    m.message += "Rule Type2 Router applied";
+    m.testsList.push(test3);
+    m.testsList.push(test1); 
+  }
+}

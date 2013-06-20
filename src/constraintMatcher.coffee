@@ -290,6 +290,7 @@ lang =
           ret = @equal(c1[0], c2[0])
         else
           ret = @equal(c1[0], c2[0]) and @equal(c1[1], c2[1])
+    return ret
 
   getIdentifiers : (rule) ->
     ret = []
