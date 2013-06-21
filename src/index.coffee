@@ -14,7 +14,8 @@ WorkingMemory = wm.WorkingMemory
 InitialFact = require('./pattern').InitialFact
 Fact = wm.Fact
 compile = require('./compile')
-AgendaTree = require('./agenda')
+#nextTick = require('./nextTick')
+#AgendaTree = require('./agenda')
 Context = require('./context')
 
 nools = {}
@@ -42,15 +43,15 @@ FlowContainer = declare(
       @__factHelper(fact, true)
       return fact
 
-    retract : (fact) ->
-      @__wmAltered = true
-      @__factHelper(fact, false)
-      return fact
+    # retract : (fact) ->
+    #   @__wmAltered = true
+    #   @__factHelper(fact, false)
+    #   return fact
 
-    modify : (fact, cb) ->
-      f = @retract(fact)
-      cb.call(fact, fact) if typeof cb is "function"
-      return @assert(f)
+    # modify : (fact, cb) ->
+    #   f = @retract(fact)
+    #   cb.call(fact, fact) if typeof cb is "function"
+    #   return @assert(f)
 
     makeConstraintsList : (ruleObj, patternNode) ->
       if patternNode.hasOwnProperty("leftPattern")
@@ -61,6 +62,8 @@ FlowContainer = declare(
         ruleObj.constraintsList.push(patternNode.constraints)
 
     match : (cb) -> 
+      ret = new Promise()
+      ret.classic(cb)
       for dRule in @__rules
         dRule.satisfyingFacts = []
         dRule.constraintsList = []
@@ -78,18 +81,18 @@ FlowContainer = declare(
         return r1.priority - r2.priority
       )
 
-      for dRule in @__rules
+      for dRule, j in @__rules
         if @checkFire(dRule)
           context = new Context(dRule.satisfyingFacts[0][0])
           context.set(dRule.constraintsList[0][0].alias, dRule.satisfyingFacts[0][0].object)
           for satisfyingFacts, i in dRule.satisfyingFacts 
             if i isnt 0
               c = new Context(satisfyingFacts[0])
+              c.set(dRule.constraintsList[i][0].alias, satisfyingFacts[0].object) # ChAnGe Here
               context.match = context.match.merge(c.match)
-              context.set(dRule.constraintsList[i][0].alias, satisfyingFacts[0].object)
-          dRule.fire(this, context.match)
-
-
+          dRule.fire(this, context.match).addErrback(ret.errback)
+      ret.callback()
+      return ret
 
     checkFire : (r) ->
       if r.satisfyingFacts.length is 0
@@ -141,7 +144,6 @@ FlowContainer = declare(
       return this
 
     getSession : ->
-      @assert(new InitialFact())
       for argument in arguments
         @assert(argument)
       return this

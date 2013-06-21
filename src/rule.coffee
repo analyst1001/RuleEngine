@@ -59,7 +59,7 @@ getParamTypeSwitcher = (param) ->
 #     else throw new Error("Invalid parameter type #{param}")
 getParamType = extd
   .switcher()
-  .isString( (param) -> return getParamTypeSwitcher(param.toLowerCase)
+  .isString( (param) -> return getParamTypeSwitcher(param.toLowerCase())
   )
   .isFunction( (func) -> return func
   )
@@ -69,31 +69,65 @@ getParamType = extd
   )
   .switcher()
 
-parsePattern = (pattern) ->
-  switch pattern
-    when extd(pattern).containsAt("or", 0)
+  parsePattern = extd
+    .switcher()
+    .contains("or", 0, (pattern) ->
       pattern.shift() 
-      extd(pattern).map( (cond) ->
+      return extd(pattern).map( (cond) ->
         cond.scope = pattern.scope
         parsePattern(cond)
       ).flatten().value()
-    when extd(pattern).contains("not", 0)
+    )
+    .contains("not", 0, (pattern) ->
       pattern.shift()
-      [ new NotPattern(
+      return [ new NotPattern(
         getParamType(pattern[0]),
         pattern[1] or "m",
         parser.parseConstraint(pattern[2] or "true"),
         pattern[3] or {},
         {scope : pattern.scope, pattern: pattern[2]}
       )]
-    else
-      [ new ObjectPattern(
+    )
+    .def( (pattern) ->
+      return [ new ObjectPattern(
         getParamType(pattern[0]),
         pattern[1] or "m",
         parser.parseConstraint(pattern[2] or "true"),
         pattern[3] or {},
         {scope: pattern.scope, pattern: pattern[2]}
       )]
+    )
+    .switcher()
+
+# parsePattern = (pattern) ->
+#   console.log(pattern)
+#   switch pattern
+#     when extd(pattern).containsAt("or", 0)
+#       console.log("Here 1")
+#       pattern.shift() 
+#       extd(pattern).map( (cond) ->
+#         cond.scope = pattern.scope
+#         parsePattern(cond)
+#       ).flatten().value()
+#     when extd(pattern).containsAt("not", 0)
+#       pattern.shift()
+#       console.log("Here 2")
+#       [ new NotPattern(
+#         getParamType(pattern[0]),
+#         pattern[1] or "m",
+#         parser.parseConstraint(pattern[2] or "true"),
+#         pattern[3] or {},
+#         {scope : pattern.scope, pattern: pattern[2]}
+#       )]
+#     else
+#       console.log("Here3")
+#       [ new ObjectPattern(
+#         getParamType(pattern[0]),
+#         pattern[1] or "m",
+#         parser.parseConstraint(pattern[2] or "true"),
+#         pattern[3] or {},
+#         {scope: pattern.scope, pattern: pattern[2]}
+#       )]
       
 Rule = declare(
   instance : 
@@ -113,7 +147,7 @@ Rule = declare(
         if cb.length is 3 then cb.call(flow, match.factHash, flow, ret.classic) else cb.call(flow, match.factHash, flow)
       catch e
         ret.errback(e)
-      return ret 
+      return ret
 )
 
 createRule = (name, options, conditions, cb) ->
@@ -126,7 +160,7 @@ createRule = (name, options, conditions, cb) ->
   if isRules and conditions.length is 1
     conditions = conditions[0]
     isRules = false
-  rules = []
+  rules = []  
   scope = options.scope or {}
   conditions.scope = scope
   if isRules

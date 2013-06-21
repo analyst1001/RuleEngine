@@ -72,7 +72,7 @@ Match = declare(
           @facts.push(fact)
           @factIds.push(fact.id)
           @recency.push(fact.recency)
-          @hashCode += @factIds.join(":")         # most probably it should be =. issued request
+          @hashCode += @factIds.join(":")         # most probably it should be '='.issued request
 
     merge : (mr) ->
       ret = new @_static()
